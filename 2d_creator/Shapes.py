@@ -1,3 +1,11 @@
+##    ______________*****__________ShapeMaker________******__________________
+##    Shapes file contains class Shapmaker that is used to induce various shapes according to provided
+##    coordinates. It has varied amount of Parameters to intake that fulfills their respective responsiblity
+##    regarding connecting dots and making shape polygons.Shapemaker is an embodiment of making a class based
+##    Tkinter GUI Interface. It is solely based upon creation of various body parts and embedd them together.
+##    Shapemaker also includes Custom code of Eyeball and could also be used to introduce various other custom code
+##    if required.
+
 import Tkinter as tk
 from Tkinter import *
 import cv2
@@ -6,6 +14,10 @@ from PIL import Image, ImageTk
 import math
 
 class ShapeMaker(tk.Tk):
+
+##    Class Shapemaker initilizes various kinds of sequence to respective datatype for creation and drawing of
+##    various Figures and Objects. Shapemaker's one of most Important attribute would be circle_map which is used
+##    to store and point various red dots (points) in the figure.
     
     def __init__(self,src,window,points,extra,points_connect,arc,arc_extra,arc_ex_ex
                  ,line,line_extra,line_ex_ex,eye):
@@ -53,6 +65,9 @@ class ShapeMaker(tk.Tk):
         self.window.bind("<Configure>", self.resize)
 
     def resize(self, event):
+        
+##        """ Resizes the respective image with change in window size."""
+        
         size = (event.width, event.height)
         self.size=size
         self.original = Image.open(self.src)
@@ -64,7 +79,13 @@ class ShapeMaker(tk.Tk):
         
 
     def on_button_press(self, event):
-        # save mouse drag start position
+        
+##        """ Binding of Button Press Event:
+##            1. If no figure is created It creates a figure with adjusted points.
+##            2. If clicked area lis inside red dot of any point It changes current selected.
+##            3. If clicked area do not contain any red dots it moves currently selected to that
+##               area."""
+
         self.start_x = event.x
         self.start_y = event.y
 
@@ -98,6 +119,10 @@ class ShapeMaker(tk.Tk):
             
 
     def on_move_press(self, event):
+
+##        """ Binding of Motion:
+##            Does same as mouse press"""
+        
         curX, curY = (event.x, event.y)
         for each in self.circle_dict.keys():
             if self.in_circle(curX,curY,each):
@@ -118,6 +143,11 @@ class ShapeMaker(tk.Tk):
                     
                 
     def on_button_release(self, event):
+
+##        """ Binding Of release Button:
+##            1. Using various Functions it deletes whole figure and recreates
+##               it and new respective point"""
+        
         self.window.delete(self.poly)
         self.delete_circle()
         self.delete_line()
@@ -139,7 +169,12 @@ class ShapeMaker(tk.Tk):
             print(self.circle_map)
             
 
-    def double_press(self, event):       
+    def double_press(self, event):
+
+##        """Binding of Triple Click Event:
+##        1. It is used to draw various lines over to image and save the image as editable.jpg output
+##           in the same directory.
+##        """
         self.window.delete("all")
         #self.delete_circle()
         #self.delete_line()
@@ -185,13 +220,17 @@ class ShapeMaker(tk.Tk):
         self.window.unbind("<B1-Motion>")
         self.window.unbind("<ButtonRelease-1>")
         self.window.unbind("<Triple-Button-1>")
-        image = ImageTk.PhotoImage(file = 'editable.jpg',width=300,height=500)
+        image = ImageTk.PhotoImage(file = 'editable.jpg',width=500,height=500,master=self.window)
         self.window.create_image(0,0, image = image, anchor = NW)
         if self.eye==True:
+            print("eyeball")
             self.eyeball()     
          
     
     def create_circle(self,on_x,on_y):
+        
+##        """ Create Red dot circle to provided point"""
+        
         key_to_add=100
         for key in self.circle_map.keys():
             if self.circle_map[key]==(on_x,on_y):
@@ -201,6 +240,10 @@ class ShapeMaker(tk.Tk):
              fill='red', width=2)
 
     def polyshape(self,point_list):
+
+##        """ Creates polygon / figure structure whole required by client.
+##            It is used by Button Release Event."""
+
         i=0
         self.delete_circle()
         self.delete_line()
@@ -219,6 +262,9 @@ class ShapeMaker(tk.Tk):
             self.create_line_ex_ex(each[0],each[1])
             
     def in_circle(self,event_x,event_y,circle_no):
+
+##        """ Check if click is inside any of red dots at present point"""
+        
         if event_x in range(self.circle_dict[circle_no][0],self.circle_dict[circle_no][2]):
             if event_y in range(self.circle_dict[circle_no][1],self.circle_dict[circle_no][3]):
                 return True
@@ -229,12 +275,20 @@ class ShapeMaker(tk.Tk):
             return False
 
     def delete_circle(self):
+
+##        """Deletes all red dots"""
+        
         for each in self.circle_info:
             self.window.delete(self.circle_info[each])
 
     def delete_line(self):
+
+##        """Deletes all lines"""
+        
         for each in self.line_info:
             self.window.delete(self.line_info[each])
+
+## ______________________________Self Explanatory using Anime style guide___________________________________________________
 
     def create_line(self,point_a,point_b):
         self.line_info[len(self.line_info)]=self.window.create_line(self.points[point_a],self.points[point_a+1]
@@ -253,8 +307,13 @@ class ShapeMaker(tk.Tk):
                                                                     self.circle_map[on_element+point_a][1],
                                                                     self.circle_map[on_element+point_b][0],
                                                                     self.circle_map[on_element+point_b][1],fill="red")
+
+##______________________________________________________________________________________________________________________________
         
     def adjust_points(self,x,y):
+
+##        """ Used to buid figure at starting point in first button press event"""
+        
         i=0
         while(i<len(self.points)):
             self.points[i]=self.points[i]+x
@@ -268,6 +327,7 @@ class ShapeMaker(tk.Tk):
             self.circle_map[to_add + key[2]] = (key[0]+x,key[1]+y)
             del self.extra_point[key]
 
+##_________________________________________________________Drawing Functions_______________________________________________________
 
     def draw_arc(self,point_a,point_b,angle,fstart,tend,depend_x,depend_y):
         print("_______arc_______")
@@ -391,6 +451,11 @@ class ShapeMaker(tk.Tk):
         if depend_x==0 and depend_y == 0:
             cv2.line(self.image,(x1,y1),(x2,y2),0)
             return
+
+##_________________________________________________________________________________________________________________
+
+##________________________________________Custom Eyeball Functions__________________________________________________
+##          Called only for tight and left eyes
         
     def eyeball(self):
         self.window.create_image(0, 0, image=self.render_image, anchor=NW, tags="IMG")  
@@ -442,6 +507,10 @@ class ShapeMaker(tk.Tk):
         return False          
         
     def in_eyelid(self,ptx,pty):
+
+##        """ Check if Eyeball is in Eyelid or not
+##            Removes all the parts that are outside."""
+        
         on_element = len(self.points)/2
         x2 = self.points[8]
         y2 = self.points[9]
@@ -495,6 +564,10 @@ class ShapeMaker(tk.Tk):
                         self.image[y,x,1]=255
                         self.image[y,x,2]=255
         cv2.imwrite('editable.jpg',self.image)
+
+##__________________________________________________________________________________________________________
+
+##______________________________________Your Code Goes Here__________________________________________________
                         
                 
             

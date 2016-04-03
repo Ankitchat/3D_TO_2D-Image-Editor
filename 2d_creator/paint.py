@@ -99,7 +99,7 @@ def b2down(event):
     if created == 1:
         drawing_area.delete("line")
         line = drawing_area.create_line(event.x,event.y,event.x+distance+1,event.y)
-        draw.line(((event.x,event.y),(event.x+distance+1,event.y)),fill=0)
+        #draw.line(((event.x,event.y),(event.x+distance+1,event.y)),fill=0)
         xold = event.x
         yold = event.y
         xlold = event.x+distance
@@ -133,9 +133,9 @@ def motion(event):
             print(xold,yold,event.x,event.y)
             print(xlold,ylold,x2,y2)
             event.widget.create_line(xold,yold,event.x,event.y)
-            draw.line(((xold,yold),(event.x,event.y)))
+            draw.line(((xold,yold),(event.x,event.y)),fill=0)
             event.widget.create_line(xlold,ylold,x2,y2)
-            draw.line(((xlold,ylold),(x2,y2)))
+            draw.line(((xlold,ylold),(x2,y2)),fill=0)
             xlold = x2
             ylold = y2
             distance = distance-1
@@ -151,7 +151,7 @@ def b1down2(event):
         line = drawing_area.create_line(event.x,event.y,event.x+10,event.y)
         draw.line(((event.x,event.y),(event.x+10,event.y)),fill=0)
         line2 = drawing_area.create_line(event.x,event.y,event.x-10,event.y)
-        draw.line(((event.x,event.y),(event.x-10,event.y)),fill=0)
+        #draw.line(((event.x,event.y),(event.x-10,event.y)),fill=0)
         xold = event.x
         yold = event.y
         xlold = event.x+10
